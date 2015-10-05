@@ -157,28 +157,6 @@ public class Main {
         return sounds;
     }
     
-    public static ArrayList<Sound> chooseBackingFiles(){
-        System.out.println("Choose FIles()");
-        ArrayList<Sound> sounds = new ArrayList<>();
-        //pick images
-        
-        JFileChooser chooser = new JFileChooser();
-        chooser.setMultiSelectionEnabled(true);
-        Component frame = null;
-
-         // Show the dialog; wait until dialog is closed
-        chooser.showOpenDialog(frame);
-
-        // Retrieve the selected files.
-        File[] files = chooser.getSelectedFiles();
-        for (File file : files) {
-            String filePath = file.getAbsolutePath();
-            Sound sound = new Sound(filePath);
-            sounds.add(sound);
-        }
-        
-        return sounds;
-    }
     //Takes in two values, file and what level to clip at.
     public static void clipAmplitude(File soundFile, int value){
         Sound oldSound = new Sound(soundFile.getAbsolutePath());
@@ -202,7 +180,7 @@ public class Main {
             //minAmplitude value.
             else if (amplitude < 0) {
                 if (amplitude < minAmplitude)
-                    sample.setValue(minAmplitude);
+                    sample.setValue(-minAmplitude);
             }
         }
         
