@@ -5,17 +5,21 @@
  */
 package pkg7615_assignment_3;
 
+import guzdial.FileChooser;
+import guzdial.Picture;
 import guzdial.Sound;
 import guzdial.SoundSample;
 import java.awt.Component;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import static pkg7615_assignment_3.Main.chooseFiles;
 
 /**
  *
@@ -29,9 +33,7 @@ public class Main {
     public static void main(String[] args) {
         
         //Sound grab the sound file
-        while(true){
-            System.out.println("Please choose which sound file you would like to manipulate");
-            File soundFile = chooseFile();
+            
             //Process User Function
             System.out.println("What would you like to do? Enter \n [1] to Normalize a clip\n"
                     + " [2] to Apply Clipping (Amplitude) \n [3] to Decrease Volume \n [4] to play a story");
@@ -40,27 +42,34 @@ public class Main {
             String command = scanner.nextLine();
             switch (command) {
                 case "1":
+                    
                     System.out.println("User wants to Normalize a clip");
+                    System.out.println("Please choose which sound file you would like to manipulate");
+                    File soundFile = chooseFile();
                     normalizeSample(soundFile,scanner);
                     break;
                 case "2":
                     System.out.println("User wants to Apply clipping (Amplitude)");
+                    System.out.println("Please choose which sound file you would like to manipulate");
+                    File soundFile1 = chooseFile();
                     System.out.println("Please enter what amplitude you would like to begin clipping");
                     int clippingVal = Integer.parseInt(scanner.nextLine());
-                    clipAmplitude(soundFile,clippingVal);
+                    clipAmplitude(soundFile1,clippingVal);
                     break;
                 case "3":
                     System.out.println("User wants to Decrease Volumes");
+                    System.out.println("Please choose which sound file you would like to manipulate");
+                    File soundFile2 = chooseFile();
                     System.out.println("Please enter by how much you would like to decrease the volume (amplitude)");
                     int decreaseVal = Integer.parseInt(scanner.nextLine());
-                    decreaseVolume(soundFile, decreaseVal, scanner);
+                    decreaseVolume(soundFile2, decreaseVal, scanner);
                     break;
                 case "4": 
                     System.out.println("User wants to play a story");
-                    tellAStory(soundFile);
+                    tellAStory();
 
             } 
-        }     
+           
     }
     
     public static File chooseFile(){
@@ -73,16 +82,104 @@ public class Main {
         return file;
     }
     
-    public static void tellAStory(File soundFile){
+    
+    public static void tellAStory(){
         
-        Sound sound = new Sound (soundFile.getAbsolutePath());
-        Sound newSound = new Sound (soundFile.getAbsolutePath());
+      
+        File[] backingFiles = new File[7];
         
-        sound.blockingPlay();
-        newSound.blockingPlay();
+        backingFiles[0] = new File("src/pkg7615_assignment_3/BTrack1.wav");
+        backingFiles[1]= new File("src/pkg7615_assignment_3/BTrack2.wav");
+        backingFiles[2] = new File("src/pkg7615_assignment_3/BTrack3.wav");
+        backingFiles[3] = new File("src/pkg7615_assignment_3/BTrack4.wav");
+        backingFiles[4] = new File("src/pkg7615_assignment_3/BTrack5.wav");
+        backingFiles[5] = new File("src/pkg7615_assignment_3/BTrack6.wav");
+        backingFiles[6] = new File("src/pkg7615_assignment_3/BTrack7.wav");
+        
+        ArrayList<Sound> backingTracks = new ArrayList<>();
+            
+        
+        for (File file : backingFiles) {
+            String filePath = file.getAbsolutePath();
+            Sound sound = new Sound(filePath);
+         
+            backingTracks.add(sound);
+        }
+        
+        
+        
+        //Pick the files
+        System.out.println("Choose sounds");
+        ArrayList<Sound> sounds = Main.chooseFiles();
+        
+        //Play in sequence
+       
+        backingTracks.get(0).blockingPlay();
+        sounds.get(0).blockingPlay();
+        backingTracks.get(1).blockingPlay();
+        sounds.get(1).blockingPlay();
+        backingTracks.get(2).blockingPlay();
+        sounds.get(2).blockingPlay();
+        backingTracks.get(3).blockingPlay();
+        sounds.get(3).blockingPlay();
+        backingTracks.get(4).blockingPlay();
+        sounds.get(4).blockingPlay();
+        backingTracks.get(5).blockingPlay();
+        sounds.get(5).blockingPlay();
+        sounds.get(6).blockingPlay();
+        backingTracks.get(6).blockingPlay();
+   
+    
+        
         
     }
     
+    public static ArrayList<Sound> chooseFiles(){
+        System.out.println("Choose FIles()");
+        ArrayList<Sound> sounds = new ArrayList<>();
+        //pick images
+        
+        JFileChooser chooser = new JFileChooser();
+        chooser.setMultiSelectionEnabled(true);
+        Component frame;
+        frame = null;
+
+         // Show the dialog; wait until dialog is closed
+        chooser.showOpenDialog(null);
+
+        // Retrieve the selected files.
+        File[] files = chooser.getSelectedFiles();
+        for (File file : files) {
+            String filePath = file.getAbsolutePath();
+            Sound sound = new Sound(filePath);
+            sounds.add(sound);
+        }
+        
+        return sounds;
+    }
+    
+    public static ArrayList<Sound> chooseBackingFiles(){
+        System.out.println("Choose FIles()");
+        ArrayList<Sound> sounds = new ArrayList<>();
+        //pick images
+        
+        JFileChooser chooser = new JFileChooser();
+        chooser.setMultiSelectionEnabled(true);
+        Component frame = null;
+
+         // Show the dialog; wait until dialog is closed
+        chooser.showOpenDialog(frame);
+
+        // Retrieve the selected files.
+        File[] files = chooser.getSelectedFiles();
+        for (File file : files) {
+            String filePath = file.getAbsolutePath();
+            Sound sound = new Sound(filePath);
+            sounds.add(sound);
+        }
+        
+        return sounds;
+    }
     //Takes in two values, file and what level to clip at.
     public static void clipAmplitude(File soundFile, int value){
         
