@@ -19,8 +19,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import static pkg7615_assignment_3.Main.chooseFiles;
-
+        
 /**
  *
  * @author thilinaratnayake
@@ -182,7 +181,62 @@ public class Main {
     }
     //Takes in two values, file and what level to clip at.
     public static void clipAmplitude(File soundFile, int value){
+        Sound oldSound = new Sound(soundFile.getAbsolutePath());
+        Sound newSound = new Sound(soundFile.getAbsolutePath());
+        //Get all the values of the (new) selected sound clip.
+        SoundSample[] sampleArray = newSound.getSamples();
+        int maxAmplitude = value;
+        int minAmplitude = (value * -1);
         
+        for (SoundSample sample : sampleArray) {
+            //Get the amplitude of the sound value and assign it the amplitude variable.
+            int amplitude = sample.getValue();
+            //If the amplitude of the current sound sample is greater than the max
+            //assigned amplitude value, set it to the max.
+            if (amplitude > 0) {
+                if (amplitude > maxAmplitude) {
+                    sample.setValue(maxAmplitude);
+                }
+            }
+            //If the negative amplitude if less than the min amplitude, set it to the
+            //minAmplitude value.
+            else if (amplitude < 0) {
+                if (amplitude < minAmplitude)
+                    sample.setValue(minAmplitude);
+            }
+        }
+        
+        //Allow user to compare the old and new sound
+        System.out.println("Volume has been decreased");
+        while (true) {
+            System.out.println("Hit [1] to listen to the old sample \n"
+                    + "Hit [2] to listen to the new sample \n"
+                    + "Hit [3] to save the files to directory \n"
+                    + "Hit [4] to exit");
+            Scanner scanner = new Scanner(System.in);
+            String command = scanner.nextLine();
+            switch (command) {
+                case "1":
+                    System.out.println("Playing old sample");
+                    oldSound.play();
+                    break;
+                case "2":
+                    System.out.println("Playing new sample");
+                    newSound.play();
+                    break;
+                case "3":
+                    System.out.println("Saving files..");
+                    oldSound.write(soundFile.getParent()+"/DV_oldSound.wav");
+                    newSound.write(soundFile.getParent()+"/DV_newSound.wav");
+                    System.out.println("Done saving!");
+                    break;
+                default:
+                    System.out.println("Exiting current operation");
+                    break;
+
+            }
+
+        }
     }
     public static void normalizeSample(File soundFile, Scanner scanner){
         Sound oldSound = new Sound(soundFile.getAbsolutePath());
